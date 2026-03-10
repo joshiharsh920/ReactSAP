@@ -3,13 +3,39 @@ import { useState } from "react";
 import { useEffect } from "react";
 import DataTable from "react-data-table-component";
 import FragmentPopup from "./FragmentData";
+import Navbar from "./Navbar.jsx";
 
 function MainPage() {
   const [records, setRecords] = useState([]);
   const [showFragment, setShowFragment] = useState(false);
   const [weather, setWeather] = useState(null);
+  useEffect(() => {
+    userLocation();
+    callCapService();
+  }, [])
 
   const WEATHER_API_KEY = '983ff4f9d3d6d34f89b99e0ed0525f60';
+
+  function userLocation() {
+    navigator.geolocation.getCurrentPosition((position) => {
+      const lat = position.coords.latitude;
+      const lon = position.coords.longitude;
+
+      const apiKey = "913f164ecbb1c0d670e0375fd890644b";
+
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
+      )
+        .then(
+          (res) => res.json()
+        )
+        .then(
+          (data) => setWeather(data)
+        );
+      console.log(weather);
+    });
+  }
+
   const columns = [
     {
       name: "First Name",
@@ -65,33 +91,11 @@ function MainPage() {
     }
   };
 
-  useEffect(() => {
-    callCapService();
-    userLocation();
 
-  }, []);
-
-  function userLocation() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      const lat = position.coords.latitude;
-      const lon = position.coords.longitude;
-
-      const apiKey = "913f164ecbb1c0d670e0375fd890644b";
-
-      fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`
-      )
-        .then(
-          (res) => res.json()
-        )
-        .then(
-          (data) => setWeather(data)
-        );
-    });
-  }
 
   return (
     <>
+      <Navbar weather={weather} />
       <section id="section1" className="relative h-screen flex items-center justify-center bg-gradient-to-r from-gray-900 via-blue-900 to-gray-900 text-white overflow-hidden">
         <div className="absolute w-96 h-96 bg-blue-500 rounded-full blur-3xl opacity-30 top-20 left-20"></div>
         <div className="absolute w-96 h-96 bg-purple-500 rounded-full blur-3xl opacity-30 bottom-20 right-20"></div>
