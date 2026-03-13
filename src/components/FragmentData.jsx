@@ -49,16 +49,22 @@ function FragmentPopup({ close }) {
                 }
             );
 
+            // 1. Check if the response is NOT okay
             if (!response.ok) {
-                throw new Error(`Failed to save data: ${response.status}`);
+                const errorData = await response.json(); // Read the OData error body
+
+                // 2. Extract the specific message from CAPM
+                // OData structure is usually error.message or error.message.value
+                const errorMessage = errorData.error?.message?.value || errorData.error?.message || "Something went wrong";
+
+                throw new Error(errorMessage); // Throw it so the catch block handles it
             }
 
             const result = await response.json();
-            console.log("Data posted successfully:", result);
-
-            close(); // Close the fragment only if POST succeeds
-        } catch (err) {
-            console.error("Error posting data:", err);
+            console.log("Success!", result);
+            close();
+        } catch (errorData) {
+            console.error("Error posting data:", errorData);
             setError("Failed to save. Please try again.");
         } finally {
             setLoading(false);

@@ -12,6 +12,7 @@ import Navbar from './components/Navbar';
 function App() {
   const [weather, setWeather] = useState(null);
   const WEATHER_API_KEY = '983ff4f9d3d6d34f89b99e0ed0525f60';
+  const hidepathname = '/services';
 
   function userLocation() {
     navigator.geolocation.getCurrentPosition((position) => {
@@ -29,13 +30,12 @@ function App() {
         .then(
           (data) => setWeather(data)
         );
-      console.log(weather);
     });
   }
 
   return (
     <>
-      <Navbar weather={weather} />
+      {!location.pathname.includes(hidepathname) && <Navbar weather={weather} />}
       <Routes>
         <Route path='/' element={<MainPage />} />
         <Route path='/home' element={<MainPage />} />
