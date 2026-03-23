@@ -7,6 +7,7 @@ import FragmentPopup from "./FragmentData";
 function MainPage() {
   const [records, setRecords] = useState([]);
   const [showFragment, setShowFragment] = useState(false);
+
   const [weather, setWeather] = useState(null);
 
   const columns = [
