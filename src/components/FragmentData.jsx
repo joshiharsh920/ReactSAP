@@ -16,6 +16,8 @@ function FragmentPopup({ close }) {
         salary: "",
         sex: ""
     });
+
+    
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.placeholder]: e.target.value });
         // Using placeholder as key (you can also use 'name' attribute)
